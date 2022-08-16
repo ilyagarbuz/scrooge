@@ -51,7 +51,7 @@ export default {
         const uid = await context.getters.getUid;
         await set(ref(db, "users/" + uid + "/info"), {
           locale: "ru-RU",
-          bill: 10000,
+          bill: 0,
           name: name,
         });
       } catch (e) {

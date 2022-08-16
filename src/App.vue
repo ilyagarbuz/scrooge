@@ -35,4 +35,11 @@ export default {
 <style lang="scss">
 @import "~materialize-css/dist/css/materialize.min.css";
 @import "assets/index.css";
+
+.input-file-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 </style>

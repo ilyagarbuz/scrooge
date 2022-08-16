@@ -5,14 +5,10 @@
         <span class="card-title">Счет в валюте</span>
 
         <p class="currency-line">
-          <span>{{ this.$store.getters.getInfo.bill }} </span
-          ><span style="margin-right: 5px; font-size: 13px"> BYN</span>
+          <span>{{ mainBill }} </span>
         </p>
         <p class="currency-line" v-for="bill in bills" :key="bill.id">
-          <span>{{ bill.count.toFixed(2) }} </span
-          ><span style="margin-left: 5px; font-size: 13px">
-            {{ bill.abb }}</span
-          >
+          <span>{{ bill.count }} </span>
         </p>
       </div>
     </div>
@@ -20,15 +16,22 @@
 </template>
 
 <script>
+import currencyFilter from "@/helpers/currency.filter";
 export default {
   props: ["currency"],
   computed: {
+    mainBill() {
+      return currencyFilter(this.$store.getters.getInfo.bill);
+    },
     bills() {
       return this.currency.map((cur) => {
         return {
           id: cur.Cur_ID,
           abb: cur.Cur_Abbreviation,
-          count: this.$store.getters.getInfo.bill / cur.Cur_OfficialRate,
+          count: currencyFilter(
+            this.$store.getters.getInfo.bill / cur.Cur_OfficialRate,
+            cur.Cur_Abbreviation
+          ),
         };
       });
     },

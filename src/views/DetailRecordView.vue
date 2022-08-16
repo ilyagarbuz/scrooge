@@ -17,9 +17,12 @@
             <div class="card-content white-text">
               <p>Описание: {{ record.description }}</p>
               <p>Сумма: {{ record.amount }}</p>
-              <p>Категория: {{ record.title }}</p>
+              <p>Категория: {{ record.title || "Доходы" }}</p>
 
               <small>{{ record.date }}</small>
+            </div>
+            <div v-if="record.file" class="card-content white-text">
+              <img class="card-content-image" :src="record.file" alt="bill" />
             </div>
           </div>
         </div>
@@ -32,6 +35,7 @@
 import AppLoader from "@/components/app/AppLoader.vue";
 import dateFormat from "@/helpers/dateFormat";
 import { useMeta } from "vue-meta";
+import currencyFilter from "@/helpers/currency.filter";
 
 export default {
   setup() {
@@ -45,17 +49,17 @@ export default {
     };
   },
   async mounted() {
-    const record = await this.$store.dispatch(
-      "fetchRecordById",
-      this.$route.params.id
-    );
+    const record = await this.$store.dispatch("fetchRecordById", {
+      id: this.$route.params.id,
+      type: this.$route.query.type,
+    });
     const category = await this.$store.dispatch(
       "fetchCategoryById",
       record.categoryId
     );
-    console.log(category);
     this.record = {
       ...record,
+      amount: currencyFilter(record.amount),
       title: category.title,
       typeColor: record.type === "income" ? "green" : "red",
       typeText: record.type === "income" ? "Доход" : "Расход",
@@ -66,3 +70,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.card-content-image {
+  width: 100%;
+}
+</style>

@@ -1,23 +1,43 @@
 import { getDatabase, ref, push, child, get } from "firebase/database";
+import {
+  getStorage,
+  ref as stRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 
 export default {
   actions: {
-    async createRecord(context, record) {
+    async createRecord(context, { record, type }) {
+      const db = getDatabase();
+      const uid = context.getters.getUid;
       try {
-        const db = getDatabase();
-        const uid = context.getters.getUid;
-        return await push(ref(db, "users/" + uid + "/records"), record);
+        if (record.file) {
+          const storage = getStorage();
+          const storageRef = stRef(
+            storage,
+            "users/" + uid + `/${record.file.name}`
+          );
+          await uploadBytes(storageRef, record.file);
+          record = {
+            ...record,
+            file: await getDownloadURL(
+              stRef(storage, "users/" + uid + `/${record.file.name}`)
+            ),
+          };
+        }
+        await push(ref(db, "users/" + uid + `/records/${type}`), record);
       } catch (e) {
         context.commit("setError", e);
         throw e;
       }
     },
 
-    async fetchRecords(context) {
+    async fetchRecords(context, type) {
       try {
         const dbRef = ref(getDatabase());
         const snapshot = await get(
-          child(dbRef, `users/${context.getters.getUid}/records`)
+          child(dbRef, `users/${context.getters.getUid}/records/${type}`)
         );
         const recordsData = await snapshot.val();
         return recordsData
@@ -31,11 +51,11 @@ export default {
         throw e;
       }
     },
-    async fetchRecordById(context, id) {
+    async fetchRecordById(context, { id, type }) {
       try {
         const dbRef = ref(getDatabase());
         const snapshot = await get(
-          child(dbRef, `users/${context.getters.getUid}/records/${id}`)
+          child(dbRef, `users/${context.getters.getUid}/records/${type}/${id}`)
         );
         const recordData = await snapshot.val();
         return recordData ? { ...recordData, id } : {};

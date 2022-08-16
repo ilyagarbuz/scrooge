@@ -1,4 +1,7 @@
 <template>
+  <div class="page-subtitle">
+    <h4>История счёта</h4>
+  </div>
   <table>
     <thead>
       <tr>
@@ -12,7 +15,7 @@
     </thead>
 
     <tbody>
-      <tr v-for="(record, index) in records" :key="record.id">
+      <tr v-for="(record, index) in formatedRecords" :key="record.id">
         <td>{{ index + 1 }}</td>
         <td>{{ record.amount }}</td>
         <td>{{ record.date }}</td>
@@ -29,6 +32,7 @@
               $router.push({
                 name: 'detail-record',
                 params: { id: record.id },
+                query: { type: record.type },
               })
             "
           >
@@ -41,7 +45,27 @@
 </template>
 
 <script>
+import currencyFilter from "@/helpers/currency.filter";
 export default {
   props: ["records"],
+  computed: {
+    formatedRecords() {
+      return this.records.map((rec) => {
+        return {
+          ...rec,
+          amount: currencyFilter(rec.amount),
+        };
+      });
+    },
+  },
 };
 </script>
+
+<style scoped>
+.page-subtitle {
+  text-align: center;
+}
+.page-subtitle h4 {
+  font-size: 1.5em;
+}
+</style>

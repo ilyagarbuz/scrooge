@@ -10,10 +10,16 @@
 
     <AppLoader v-if="isLoading" />
 
-    <div v-else class="row">
-      <home-bill :currency="currency" />
+    <div v-else class="div">
+      <div class="row">
+        <home-bill :currency="currency" />
 
-      <home-currency :currency="currency" />
+        <home-currency :currency="currency" />
+      </div>
+
+      <div class="row">
+        <home-payment />
+      </div>
     </div>
   </div>
 </template>
@@ -21,6 +27,7 @@
 <script>
 import HomeBill from "@/components/home/HomeBill.vue";
 import HomeCurrency from "@/components/home/HomeCurrency.vue";
+import HomePayment from "@/components/home/HomePayment.vue";
 import { useMeta } from "vue-meta";
 
 export default {
@@ -30,6 +37,7 @@ export default {
   components: {
     HomeBill,
     HomeCurrency,
+    HomePayment,
   },
   data() {
     return {

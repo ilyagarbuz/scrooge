@@ -4,11 +4,6 @@
       <h3>История записей</h3>
     </div>
 
-    <div class="history-chart">
-      <!-- <canvas></canvas> -->
-      <pie-chart :chartData="chartData" :chartOptions="chartOptions" />
-    </div>
-
     <app-loader v-if="isLoading" />
 
     <p v-else-if="!records.length" class="center">
@@ -17,6 +12,14 @@
     </p>
 
     <section v-else>
+      <div class="page-subtitle">
+        <h4>Статистика расходов</h4>
+      </div>
+      <div class="history-chart">
+        <!-- <canvas></canvas> -->
+        <pie-chart :chartData="chartData" :chartOptions="chartOptions" />
+      </div>
+
       <history-table :records="currentItems" />
 
       <paginate
@@ -58,16 +61,30 @@ export default {
   },
   async mounted() {
     const categories = await this.$store.dispatch("fetchCategories");
-    const records = await this.$store.dispatch("fetchRecords");
-    this.records = records.map((record) => {
+    const recordsOutcome = await this.$store.dispatch(
+      "fetchRecords",
+      "outcome"
+    );
+    this.records = recordsOutcome.map((record) => {
       return {
         ...record,
         title: categories.find((cat) => cat.id === record.categoryId).title,
-        typeText: record.type === "income" ? "Доход" : "Расход",
-        typeColor: record.type === "income" ? "green" : "red",
+        typeText: "Расход",
+        typeColor: "red",
         date: dateFormat(new Date(record.date), true),
       };
     });
+    const recordsIncome = await this.$store.dispatch("fetchRecords", "income");
+    this.records = this.records.concat(
+      recordsIncome.map((record) => {
+        return {
+          ...record,
+          typeText: "Доход",
+          typeColor: "green",
+          date: dateFormat(new Date(record.date), true),
+        };
+      })
+    );
 
     this.chartData = {
       labels: categories.map((cat) => cat.title),
@@ -105,8 +122,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .page-link {
   cursor: pointer;
+}
+.page-subtitle {
+  text-align: center;
+}
+.page-subtitle h4 {
+  font-size: 1.5em;
+}
+
+.history-chart {
+  margin-bottom: 60px;
 }
 </style>

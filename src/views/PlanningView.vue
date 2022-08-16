@@ -37,6 +37,7 @@
 
 <script>
 import { useMeta } from "vue-meta";
+import currencyFilter from "@/helpers/currency.filter";
 
 export default {
   setup() {
@@ -52,7 +53,7 @@ export default {
   },
 
   async mounted() {
-    this.records = await this.$store.dispatch("fetchRecords");
+    this.records = await this.$store.dispatch("fetchRecords", "outcome");
     this.categories = await this.$store.dispatch("fetchCategories");
     this.planningCategories = this.categories.map((cat) => {
       const spend = this.records
@@ -70,10 +71,11 @@ export default {
       const residual = cat.limit - spend;
       const tooltip = `${
         residual < 0 ? "Превышение на" : "Осталось"
-      } ${Math.abs(residual)}`;
+      } ${currencyFilter(Math.abs(residual))}`;
       return {
         ...cat,
-        spend,
+        limit: currencyFilter(cat.limit),
+        spend: currencyFilter(spend),
         progressPercent,
         progressColor,
         tooltip,

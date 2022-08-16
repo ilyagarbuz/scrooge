@@ -24,36 +24,11 @@
         <label>Выберите категорию</label>
       </div>
 
-      <p>
-        <label>
-          <input
-            class="with-gap"
-            name="type"
-            type="radio"
-            value="income"
-            v-model="type"
-          />
-          <span>Доход</span>
-        </label>
-      </p>
-
-      <p>
-        <label>
-          <input
-            class="with-gap"
-            name="type"
-            type="radio"
-            value="outcome"
-            v-model="type"
-          />
-          <span>Расход</span>
-        </label>
-      </p>
-
       <div class="input-field">
         <input
           id="amount"
           type="number"
+          step="0.01"
           v-model.number="v$.amount.$model"
           :class="{ invalid: v$.amount.$dirty && v$.amount.$invalid }"
         />
@@ -85,6 +60,19 @@
         >
       </div>
 
+      <div class="file-field input-field">
+        <div class="btn">
+          <span class="input-file-btn"
+            >Прикрепить файл
+            <i class="large material-icons">attach_file</i></span
+          >
+          <input ref="file" type="file" id="file" />
+        </div>
+        <div class="file-path-wrapper">
+          <input ref="fileName" class="file-path validate" type="text" />
+        </div>
+      </div>
+
       <button class="btn waves-effect waves-light" type="submit">
         Создать
         <i class="material-icons right">send</i>
@@ -110,7 +98,6 @@ export default {
       isLoading: true,
       select: null,
       currentCategory: null,
-      type: "outcome",
       amount: 1,
       description: "",
     };
@@ -123,7 +110,6 @@ export default {
   },
   computed: {
     canCreateRecord() {
-      if (this.type === "income") return true;
       return this.$store.getters.getInfo.bill >= this.amount;
     },
   },
@@ -138,18 +124,22 @@ export default {
         try {
           const formData = {
             categoryId: this.currentCategory,
-            type: this.type,
+            type: "outcome",
             amount: this.amount,
             description: this.description,
             date: new Date().toJSON(),
+            file: this.$refs.file.files[0] || false,
           };
-          await this.$store.dispatch("createRecord", formData);
-          const bill =
-            this.type === "income"
-              ? this.$store.getters.getInfo.bill + this.amount
-              : this.$store.getters.getInfo.bill - this.amount;
+          await this.$store.dispatch("createRecord", {
+            record: formData,
+            type: formData.type,
+          });
+          const bill = this.$store.getters.getInfo.bill - this.amount;
           await this.$store.dispatch("updateInfo", { bill });
           this.v$.$reset();
+          this.$refs.file.value = "";
+          this.$refs.fileName.value = "";
+          this.$refs.fileName.classList.remove("valid");
           this.amount = 1;
           this.description = "";
           this.$message("Запись успешно создана");
