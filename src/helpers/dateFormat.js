@@ -1,4 +1,4 @@
-export default function dateFormat(date, time = false) {
+export default function dateFormat(date, time = false, short = false) {
   let options = {
     day: "2-digit",
     month: "long",
@@ -11,6 +11,10 @@ export default function dateFormat(date, time = false) {
       minute: "2-digit",
       second: "2-digit",
     };
-
+  if (short)
+    options = {
+      ...options,
+      month: "2-digit",
+    };
   return new Intl.DateTimeFormat("ru-RU", options).format(date);
 }

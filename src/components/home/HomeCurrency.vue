@@ -1,5 +1,5 @@
 <template>
-  <div class="col s12 m6 l8">
+  <div class="col s12 m7 l8">
     <div class="card orange darken-3 bill-card">
       <div class="card-content white-text">
         <div class="card-header">
@@ -10,7 +10,7 @@
             <tr>
               <th>Валюта</th>
               <th>Курс</th>
-              <th>Дата</th>
+              <th v-if="$screen.width > 430">Дата</th>
             </tr>
           </thead>
 
@@ -18,7 +18,7 @@
             <tr v-for="cur in formatedCurrency" :key="cur.id">
               <td>{{ cur.abb }}</td>
               <td>{{ cur.rate }}</td>
-              <td>{{ cur.date }}</td>
+              <td v-if="$screen.width > 430">{{ cur.date }}</td>
             </tr>
           </tbody>
         </table>
@@ -47,3 +47,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .bill-card {
+    height: unset;
+  }
+}
+</style>

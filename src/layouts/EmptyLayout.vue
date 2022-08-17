@@ -21,3 +21,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 540px) {
+  .auth-card {
+    width: 320px;
+  }
+}
+</style>

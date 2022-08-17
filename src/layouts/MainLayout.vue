@@ -2,11 +2,14 @@
   <div>
     <AppLoader v-if="isLoading" />
     <div v-else class="app-main-layout">
-      <app-navbar @hide-sidebar="isSidebarOpen = !isSidebarOpen" />
+      <app-navbar @hide-sidebar="toogleSidebar" />
 
-      <app-sidebar v-model="isSidebarOpen" />
+      <app-sidebar @hide-sidebar="toogleSidebar" v-model="isSidebarOpen" />
 
-      <main class="app-content" :class="{ full: !isSidebarOpen }">
+      <main
+        class="app-content"
+        :class="{ full: !isSidebarOpen || $screen.width < 1180 }"
+      >
         <div class="app-page">
           <router-view></router-view>
         </div>
@@ -37,13 +40,18 @@ export default {
   },
   data() {
     return {
-      isSidebarOpen: true,
       isLoading: true,
+      isSidebarOpen: true,
     };
   },
   computed: {
     error() {
       return this.$store.getters.error;
+    },
+  },
+  methods: {
+    toogleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
     },
   },
   watch: {
@@ -53,6 +61,7 @@ export default {
     },
   },
   mounted() {
+    if (this.$screen.width < 1180) this.toogleSidebar();
     onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
         this.$store.commit("updateCurrentUser", user);

@@ -26,8 +26,8 @@
         v-model="page"
         :page-count="pagesCount"
         :click-handler="onPaginate"
-        :prev-text="'Назад'"
-        :next-text="'Вперед'"
+        :prev-text="prevBtn"
+        :next-text="nextBtn"
         :container-class="'pagination'"
         :page-class="'waves-effect'"
       />
@@ -57,6 +57,10 @@ export default {
       isLoading: true,
       chartData: {},
       chartOptions: {},
+      prevBtn:
+        '<i class="material-icons" style="font-size: 20px; cursor: pointer; line-height: inherit;">arrow_back</i>',
+      nextBtn:
+        '<i class="material-icons" style="font-size: 20px; cursor: pointer; line-height: inherit;">arrow_forward</i>',
     };
   },
   async mounted() {
@@ -71,7 +75,6 @@ export default {
         title: categories.find((cat) => cat.id === record.categoryId).title,
         typeText: "Расход",
         typeColor: "red",
-        date: dateFormat(new Date(record.date), true),
       };
     });
     const recordsIncome = await this.$store.dispatch("fetchRecords", "income");
@@ -81,10 +84,23 @@ export default {
           ...record,
           typeText: "Доход",
           typeColor: "green",
-          date: dateFormat(new Date(record.date), true),
         };
       })
     );
+
+    this.records = this.records
+      .sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+      })
+      .map((record) => {
+        return {
+          ...record,
+          date:
+            this.$screen.width > 500
+              ? dateFormat(new Date(record.date), true)
+              : dateFormat(new Date(record.date), false, true),
+        };
+      });
 
     this.chartData = {
       labels: categories.map((cat) => cat.title),
@@ -95,8 +111,13 @@ export default {
             "#E46651",
             "#00D8FF",
             "#DD1B16",
-            "#DD1B20",
             "#00D3FF",
+            "#5499C7",
+            "#424949",
+            "#D7DBDD",
+            "#D35400",
+            "#6C3483",
+            "#F7DC6F",
           ],
           data: categories.map((cat) =>
             this.records.reduce((total, r) => {

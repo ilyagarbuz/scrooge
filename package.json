@@ -20,6 +20,7 @@
     "vue-chartjs": "^4.1.1",
     "vue-meta": "^3.0.0-alpha.10",
     "vue-router": "^4.0.3",
+    "vue-screen": "^2.1.0-beta.1",
     "vuejs-paginate-next": "^1.0.2",
     "vuex": "^4.0.0"
   },

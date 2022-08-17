@@ -3,12 +3,18 @@
     <div class="nav-wrapper">
       <div class="navbar-left">
         <a href="#" @click.prevent="$emit('hide-sidebar')">
-          <i class="material-icons black-text">dehaze</i>
+          <i
+            class="material-icons black-text"
+            :class="{ 'large-icon': $screen.width < 600 }"
+            >dehaze</i
+          >
         </a>
-        <span class="black-text">{{ formatedDate }}</span>
+        <span v-if="$screen.width > 600" class="black-text">{{
+          formatedDate
+        }}</span>
       </div>
 
-      <ul class="right hide-on-small-and-down">
+      <ul class="right">
         <li>
           <a
             class="dropdown-trigger black-text"
@@ -16,8 +22,15 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            {{ userName }}
-            <i class="material-icons right">arrow_drop_down</i>
+            <span v-if="$screen.width > 600">
+              {{ userName }}
+              <i class="material-icons right">arrow_drop_down</i>
+            </span>
+            <span v-else
+              ><i class="material-icons right" style="font-size: 35px"
+                >face</i
+              ></span
+            >
           </a>
 
           <ul id="dropdown" class="dropdown-content">
@@ -81,3 +94,28 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  nav ul a {
+    padding: 0;
+  }
+
+  .dropdown-content li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dropdown-content li:not(:nth-child(2n)) {
+    padding: 10px;
+  }
+
+  .dropdown-content li i {
+    margin-right: 0;
+  }
+}
+.large-icon {
+  font-size: 35px;
+}
+</style>

@@ -3,7 +3,7 @@
     <div class="page-title">
       <h3>Планирование</h3>
       <h4>
-        {{ $store.getters.getInfo.bill }}
+        {{ bill }}
         <span style="margin-right: 5px; font-size: 13px"> BYN</span>
       </h4>
     </div>
@@ -51,7 +51,11 @@ export default {
       planningCategories: [],
     };
   },
-
+  computed: {
+    bill() {
+      return currencyFilter(this.$store.getters.getInfo.bill);
+    },
+  },
   async mounted() {
     this.records = await this.$store.dispatch("fetchRecords", "outcome");
     this.categories = await this.$store.dispatch("fetchCategories");
@@ -85,3 +89,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .page-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+</style>

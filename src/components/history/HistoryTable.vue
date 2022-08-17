@@ -7,9 +7,9 @@
       <tr>
         <th>#</th>
         <th>Сумма</th>
-        <th>Дата</th>
-        <th>Категория</th>
-        <th>Тип</th>
+        <th v-if="$screen.width > 400">Дата</th>
+        <th v-if="$screen.width > 680">Категория</th>
+        <th v-if="$screen.width > 680">Тип</th>
         <th>Открыть</th>
       </tr>
     </thead>
@@ -17,10 +17,11 @@
     <tbody>
       <tr v-for="(record, index) in formatedRecords" :key="record.id">
         <td>{{ index + 1 }}</td>
-        <td>{{ record.amount }}</td>
-        <td>{{ record.date }}</td>
-        <td>{{ record.title }}</td>
-        <td>
+        <td v-if="record.type === 'outcome'">- {{ record.amount }}</td>
+        <td v-else>+ {{ record.amount }}</td>
+        <td v-if="$screen.width > 400">{{ record.date }}</td>
+        <td v-if="$screen.width > 680">{{ record.title }}</td>
+        <td v-if="$screen.width > 680">
           <span class="white-text badge" :class="[record.typeColor]">{{
             record.typeText
           }}</span>

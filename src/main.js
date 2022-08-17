@@ -5,6 +5,7 @@ import store from "./store";
 import { createMetaManager } from "vue-meta";
 import Paginate from "vuejs-paginate-next";
 import messagePlugin from "./helpers/message.plugin";
+import VueScreen from "vue-screen";
 import { initializeApp } from "firebase/app";
 import AppLoader from "@/components/app/AppLoader";
 import tooltipDirective from "./directives/tooltip.directive";
@@ -29,6 +30,7 @@ createApp(App)
   .use(router)
   .use(messagePlugin)
   .use(createMetaManager())
+  .use(VueScreen)
   .directive("tooltip", tooltipDirective)
   .component("AppLoader", AppLoader)
   .component("Paginate", Paginate)

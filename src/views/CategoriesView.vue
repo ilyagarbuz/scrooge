@@ -62,3 +62,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <ul class="sidenav app-sidenav" :class="{ open: modelValue }">
+  <ul ref="sidenav" class="sidenav app-sidenav" :class="{ open: modelValue }">
     <router-link
       v-for="link in links"
       :key="link.url.name"
@@ -8,7 +8,7 @@
       active-class="active"
       custom
     >
-      <li :class="[isExactActive && 'active']">
+      <li @click="$emit('hide-sidebar')" :class="[isExactActive && 'active']">
         <a
           :href="href"
           @click="navigate"

@@ -180,3 +180,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .file-field {
+    display: flex;
+    flex-direction: column;
+    max-width: max-content;
+  }
+}
+</style>
