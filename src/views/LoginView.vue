@@ -52,7 +52,7 @@
       <div>
         <button class="btn waves-effect waves-light auth-submit" type="submit">
           Войти
-          <i class="material-icons right">send</i>
+          <i class="material-icons right login-icon">send</i>
         </button>
       </div>
 
@@ -117,3 +117,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 540px) {
+  .login-icon {
+    margin-right: 0;
+  }
+}
+</style>
