@@ -1,9 +1,10 @@
-import { getDatabase, ref, push, child, get } from "firebase/database";
+import { getDatabase, ref, push, child, get, remove } from "firebase/database";
 import {
   getStorage,
   ref as stRef,
   uploadBytes,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 
 export default {
@@ -24,6 +25,7 @@ export default {
             file: await getDownloadURL(
               stRef(storage, "users/" + uid + `/${record.file.name}`)
             ),
+            fileName: record.file.name,
           };
         }
         await push(ref(db, "users/" + uid + `/records/${type}`), record);
@@ -59,6 +61,36 @@ export default {
         );
         const recordData = await snapshot.val();
         return recordData ? { ...recordData, id } : {};
+      } catch (e) {
+        context.commit("setError", e);
+        throw e;
+      }
+    },
+    async deleteRecordById(context, { id, type }) {
+      try {
+        const dbRef = ref(getDatabase());
+        const snapshot = await get(
+          child(dbRef, `users/${context.getters.getUid}/records/${type}/${id}`)
+        );
+        if (snapshot.exists()) {
+          const loadRecord = await snapshot.val();
+          if (loadRecord.file) {
+            const fileRef = stRef(
+              getStorage(),
+              `users/${context.getters.getUid}/${loadRecord.fileName}`
+            );
+
+            await deleteObject(fileRef);
+          }
+          await remove(
+            ref(
+              getDatabase(),
+              `users/${context.getters.getUid}/records/${type}/${id}`
+            )
+          );
+        } else {
+          throw new Error();
+        }
       } catch (e) {
         context.commit("setError", e);
         throw e;

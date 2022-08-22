@@ -8,6 +8,7 @@ import messagePlugin from "./helpers/message.plugin";
 import VueScreen from "vue-screen";
 import { initializeApp } from "firebase/app";
 import AppLoader from "@/components/app/AppLoader";
+import BtnLoader from "@/components/app/AppBtnLoader";
 import tooltipDirective from "./directives/tooltip.directive";
 import "materialize-css/dist/js/materialize";
 import "./registerServiceWorker";
@@ -33,5 +34,6 @@ createApp(App)
   .use(VueScreen)
   .directive("tooltip", tooltipDirective)
   .component("AppLoader", AppLoader)
+  .component("BtnLoader", BtnLoader)
   .component("Paginate", Paginate)
   .mount("#app");

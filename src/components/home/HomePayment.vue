@@ -42,9 +42,12 @@
         </div>
 
         <button class="btn waves-effect waves-light" type="submit">
-          Пополнить
-          <i class="material-icons right">send</i>
+          <span>
+            Пополнить
+            <i class="material-icons right">send</i>
+          </span>
         </button>
+        <btn-loader v-if="isSubmiting"></btn-loader>
       </form>
     </div>
   </div>
@@ -63,6 +66,7 @@ export default {
     return {
       title: "",
       amount: 1,
+      isSubmiting: false,
     };
   },
   validations() {
@@ -77,6 +81,8 @@ export default {
         this.v$.$touch();
         return;
       }
+
+      this.isSubmiting = true;
 
       try {
         await this.$store.dispatch("updateInfo", {
@@ -101,6 +107,8 @@ export default {
         this.$message("Счёт пополнен");
       } catch (e) {
         console.log(e);
+      } finally {
+        this.isSubmiting = false;
       }
     },
   },

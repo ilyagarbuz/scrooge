@@ -42,4 +42,7 @@ export default {
   justify-content: space-between;
   gap: 8px;
 }
+.progress {
+  margin: 0.5rem 0;
+}
 </style>

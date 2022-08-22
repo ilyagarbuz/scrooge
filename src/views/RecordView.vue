@@ -66,17 +66,33 @@
             >Прикрепить файл
             <i class="large material-icons">attach_file</i></span
           >
-          <input ref="file" type="file" id="file" />
+          <input ref="file" type="file" id="file" @change="onFileChange" />
         </div>
         <div class="file-path-wrapper">
-          <input ref="fileName" class="file-path validate" type="text" />
+          <input
+            ref="fileName"
+            class="file-path"
+            type="text"
+            :class="{
+              invalid: v$.typeFile.typeValid.$invalid,
+              validate: !v$.typeFile.typeValid.$invalid,
+            }"
+          />
         </div>
+        <span class="helper-text invalid" v-if="v$.typeFile.typeValid.$invalid"
+          >Формат файла должен быть .jpg или .png</span
+        >
       </div>
 
-      <button class="btn waves-effect waves-light" type="submit">
+      <button
+        class="btn waves-effect waves-light"
+        :disabled="isSubmiting"
+        type="submit"
+      >
         Создать
         <i class="material-icons right">send</i>
       </button>
+      <btn-loader v-if="isSubmiting" />
     </form>
   </div>
 </template>
@@ -86,6 +102,8 @@ import M from "materialize-css";
 import useVuelidate from "@vuelidate/core";
 import { required, minValue } from "@vuelidate/validators";
 import { useMeta } from "vue-meta";
+
+const typeValid = (value) => value === "image/jpeg";
 
 export default {
   setup() {
@@ -100,12 +118,15 @@ export default {
       currentCategory: null,
       amount: 1,
       description: "",
+      typeFile: "image/jpeg",
+      isSubmiting: false,
     };
   },
   validations() {
     return {
       amount: { required, minValue: minValue(1) },
       description: { required },
+      typeFile: { typeValid },
     };
   },
   computed: {
@@ -114,13 +135,16 @@ export default {
     },
   },
   methods: {
+    onFileChange() {
+      this.typeFile = this.$refs.file.files[0].type;
+    },
     async onSubmit() {
       if (this.v$.$invalid) {
         this.v$.$touch();
         return;
       }
-
       if (this.canCreateRecord) {
+        this.isSubmiting = true;
         try {
           const formData = {
             categoryId: this.currentCategory,
@@ -129,7 +153,11 @@ export default {
             description: this.description,
             date: new Date().toJSON(),
             file: this.$refs.file.files[0] || false,
+            fileName: this.$refs.file.files[0]
+              ? this.$refs.file.files[0].name
+              : false,
           };
+          console.log(formData);
           await this.$store.dispatch("createRecord", {
             record: formData,
             type: formData.type,
@@ -146,6 +174,8 @@ export default {
         } catch (e) {
           console.log(e);
           throw e;
+        } finally {
+          this.isSubmiting = false;
         }
       } else {
         this.$message(

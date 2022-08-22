@@ -8,7 +8,10 @@
       active-class="active"
       custom
     >
-      <li @click="$emit('hide-sidebar')" :class="[isExactActive && 'active']">
+      <li
+        @click="if ($screen.width < 600) $emit('hide-sidebar');"
+        :class="[isExactActive && 'active']"
+      >
         <a
           :href="href"
           @click="navigate"

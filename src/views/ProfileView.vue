@@ -33,6 +33,8 @@
         Обновить
         <i class="material-icons right">send</i>
       </button>
+
+      <btn-loader v-if="isSubmiting" />
     </form>
   </div>
 </template>
@@ -52,6 +54,7 @@ export default {
     return {
       name: this.$store.getters.getInfo.name,
       isRuLocale: this.$store.getters.getInfo.locale === "ru-RU",
+      isSubmiting: false,
     };
   },
   validations() {
@@ -66,6 +69,8 @@ export default {
         return;
       }
 
+      this.isSubmiting = true;
+
       try {
         await this.$store.dispatch("updateInfo", {
           name: this.name,
@@ -73,6 +78,8 @@ export default {
         });
       } catch (e) {
         console.log(e);
+      } finally {
+        this.isSubmiting = false;
       }
     },
   },

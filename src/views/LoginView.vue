@@ -50,9 +50,15 @@
     </div>
     <div class="card-action">
       <div>
-        <button class="btn waves-effect waves-light auth-submit" type="submit">
-          Войти
-          <i class="material-icons right login-icon">send</i>
+        <button
+          class="btn waves-effect waves-light auth-submit"
+          :disabled="isLoadingButton"
+          type="submit"
+        >
+          <span v-if="!isLoadingButton">
+            Войти <i class="material-icons right login-icon">send</i></span
+          >
+          <btn-loader v-else />
         </button>
       </div>
 
@@ -81,6 +87,7 @@ export default {
         email: "",
         password: "",
       },
+      isLoadingButton: false,
     };
   },
   validations() {
@@ -98,6 +105,8 @@ export default {
         return;
       }
 
+      this.isLoadingButton = true;
+
       const formData = {
         email: this.form.email,
         password: this.form.password,
@@ -108,6 +117,8 @@ export default {
         this.$router.push({ name: "home" });
       } catch (e) {
         console.log(e);
+      } finally {
+        this.isLoadingButton = false;
       }
     },
   },

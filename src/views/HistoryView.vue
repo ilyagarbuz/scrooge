@@ -12,12 +12,14 @@
     </p>
 
     <section v-else>
-      <div class="page-subtitle">
-        <h4>Статистика расходов</h4>
-      </div>
-      <div class="history-chart">
-        <!-- <canvas></canvas> -->
-        <pie-chart :chartData="chartData" :chartOptions="chartOptions" />
+      <div v-if="isOutcomeRecords">
+        <div class="page-subtitle">
+          <h4>Статистика расходов</h4>
+        </div>
+        <div class="history-chart">
+          <!-- <canvas></canvas> -->
+          <pie-chart :chartData="chartData" :chartOptions="chartOptions" />
+        </div>
       </div>
 
       <history-table :records="currentItems" />
@@ -57,6 +59,7 @@ export default {
       isLoading: true,
       chartData: {},
       chartOptions: {},
+      isOutcomeRecords: false,
       prevBtn:
         '<i class="material-icons" style="font-size: 20px; cursor: pointer; line-height: inherit;">arrow_back</i>',
       nextBtn:
@@ -69,6 +72,7 @@ export default {
       "fetchRecords",
       "outcome"
     );
+    this.isOutcomeRecords = !!recordsOutcome.length;
     this.records = recordsOutcome.map((record) => {
       return {
         ...record,
