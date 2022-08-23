@@ -69,4 +69,11 @@ export default {
 .page-subtitle h4 {
   font-size: 1.5em;
 }
+
+@media (max-width: 400px) {
+  td,
+  th {
+    text-align: center;
+  }
+}
 </style>

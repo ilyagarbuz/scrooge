@@ -45,4 +45,10 @@ export default {
 .progress {
   margin: 0.5rem 0;
 }
+
+@media (max-width: 450px) {
+  .app-page {
+    padding: 1.5em 1em;
+  }
+}
 </style>

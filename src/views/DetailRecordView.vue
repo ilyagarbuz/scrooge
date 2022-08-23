@@ -25,11 +25,6 @@
               <div class="actions">
                 <ul>
                   <li>
-                    <button class="transparent">
-                      <i class="material-icons white-text">create</i>
-                    </button>
-                  </li>
-                  <li>
                     <button @click="onDelete" class="transparent">
                       <i class="material-icons white-text">delete</i>
                     </button>
@@ -130,7 +125,6 @@ export default {
 
 .actions ul {
   display: flex;
-  gap: 10px;
 }
 
 button {
@@ -138,12 +132,10 @@ button {
   border: none;
 }
 
-@media (min-width: 400px) {
-  .card-content-description {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+.card-content-description {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 @media (max-width: 1000px) {

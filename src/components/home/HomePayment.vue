@@ -41,13 +41,16 @@
           >
         </div>
 
-        <button class="btn waves-effect waves-light" type="submit">
+        <button
+          :disabled="isSubmiting"
+          class="btn waves-effect waves-light"
+          type="submit"
+        >
           <span>
             Пополнить
             <i class="material-icons right">send</i>
           </span>
         </button>
-        <btn-loader v-if="isSubmiting"></btn-loader>
       </form>
     </div>
   </div>
